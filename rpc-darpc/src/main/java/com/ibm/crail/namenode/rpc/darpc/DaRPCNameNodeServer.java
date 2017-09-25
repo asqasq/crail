@@ -9,6 +9,7 @@ import com.ibm.crail.conf.CrailConfiguration;
 import com.ibm.crail.rpc.RpcNameNodeService;
 import com.ibm.crail.rpc.RpcServer;
 import com.ibm.crail.utils.CrailUtils;
+import com.ibm.darpc.DaRPCHeapMemPool;
 import com.ibm.darpc.DaRPCServerEndpoint;
 import com.ibm.darpc.DaRPCServerGroup;
 import com.ibm.disni.rdma.RdmaServerEndpoint;
@@ -37,7 +38,8 @@ public class DaRPCNameNodeServer extends RpcServer {
 			clusterAffinities[i] = 1L << affinity;
 		}
 		DaRPCServiceDispatcher darpcService = new DaRPCServiceDispatcher(service);
-		this.namenodeServerGroup = DaRPCServerGroup.createServerGroup(darpcService, clusterAffinities, -1, DaRPCConstants.NAMENODE_DARPC_MAXINLINE, DaRPCConstants.NAMENODE_DARPC_POLLING, DaRPCConstants.NAMENODE_DARPC_RECVQUEUE, DaRPCConstants.NAMENODE_DARPC_SENDQUEUE, DaRPCConstants.NAMENODE_DARPC_POLLSIZE, DaRPCConstants.NAMENODE_DARPC_CLUSTERSIZE);
+		DaRPCHeapMemPool memPool = new DaRPCHeapMemPool();
+		this.namenodeServerGroup = DaRPCServerGroup.createServerGroup(darpcService, memPool, clusterAffinities, -1, DaRPCConstants.NAMENODE_DARPC_MAXINLINE, DaRPCConstants.NAMENODE_DARPC_POLLING, DaRPCConstants.NAMENODE_DARPC_RECVQUEUE, DaRPCConstants.NAMENODE_DARPC_SENDQUEUE, DaRPCConstants.NAMENODE_DARPC_POLLSIZE, DaRPCConstants.NAMENODE_DARPC_CLUSTERSIZE);
 		LOG.info("rpc group started, recvQueue " + namenodeServerGroup.recvQueueSize());
 		this.namenodeServerEp = namenodeServerGroup.createServerEndpoint();		
 	}

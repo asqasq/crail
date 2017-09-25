@@ -9,6 +9,7 @@ import com.ibm.crail.rpc.RpcConnection;
 import com.ibm.crail.utils.CrailUtils;
 import com.ibm.darpc.DaRPCClientEndpoint;
 import com.ibm.darpc.DaRPCClientGroup;
+import com.ibm.darpc.DaRPCHeapMemPool;
 
 public class DaRPCNameNodeClient implements RpcClient {
 	private static final Logger LOG = CrailUtils.getLogger();
@@ -25,7 +26,8 @@ public class DaRPCNameNodeClient implements RpcClient {
 		DaRPCConstants.updateConstants(conf);
 		DaRPCConstants.verify();
 		this.namenodeProtocol = new DaRPCNameNodeProtocol();
-		this.namenodeClientGroup = DaRPCClientGroup.createClientGroup(namenodeProtocol, 100, DaRPCConstants.NAMENODE_DARPC_MAXINLINE, DaRPCConstants.NAMENODE_DARPC_RECVQUEUE, DaRPCConstants.NAMENODE_DARPC_SENDQUEUE);
+		DaRPCHeapMemPool memPool = new DaRPCHeapMemPool();
+		this.namenodeClientGroup = DaRPCClientGroup.createClientGroup(namenodeProtocol, memPool, 100, DaRPCConstants.NAMENODE_DARPC_MAXINLINE, DaRPCConstants.NAMENODE_DARPC_RECVQUEUE, DaRPCConstants.NAMENODE_DARPC_SENDQUEUE);
 		LOG.info("rpc group started, recvQueue " + namenodeClientGroup.recvQueueSize());
 	}
 	
