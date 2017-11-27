@@ -21,9 +21,8 @@
 
 package com.ibm.crail.namenode.rpc.darpc;
 
-import java.util.concurrent.atomic.AtomicLong;
+import org.slf4j.Logger;
 
-import com.ibm.crail.rpc.RpcErrors;
 import com.ibm.crail.rpc.RpcNameNodeService;
 import com.ibm.crail.rpc.RpcProtocol;
 import com.ibm.crail.utils.CrailUtils;
@@ -42,8 +41,8 @@ class CounterThread extends Thread {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			for (int i = 0; i < DaRPCServiceDispatcher.counts.length; i++) {
-				sum += DaRPCServiceDispatcher.counts[i];
+			for (int i = 0; i < DaRPCServiceDispatcherStats.counts.length; i++) {
+				sum += DaRPCServiceDispatcherStats.counts[i];
 			}
 			currTime = System.currentTimeMillis();
 			System.out.println("Statistics: "
@@ -127,7 +126,6 @@ public class DaRPCServiceDispatcherStats extends DaRPCServiceDispatcher {
 			case RpcProtocol.CMD_PING_NAMENODE:
 				break;
 			default:
-				LOG.info("Rpc command not valid, opcode " + request.getCmd());
 		}
 
 		//use every 8th element to avoid false cache sharing
